@@ -1,6 +1,5 @@
 package br.com.senai.teste.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import br.com.senai.teste.dto.EmprestimoRequest;
 import br.com.senai.teste.model.Emprestimo;
@@ -34,12 +34,10 @@ public class EmprestimoController {
 
         Integer alunoId = dados.getAlunoId();
         Integer livroId = dados.getLivroId();
-        LocalDate dataPrevistaDevolucao = dados.getDataPrevistaDevolucao();
 
         Optional<Emprestimo> emprestimo = emprestimoService.cadastrar(
                 alunoId,
-                livroId,
-                dataPrevistaDevolucao);
+                livroId);
 
         if (emprestimo.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -69,4 +67,19 @@ public class EmprestimoController {
 
         return ResponseEntity.notFound().build();
     }
-}
+    @PatchMapping("/{Id}/devolucao")
+
+        public ResponseEntity<Emprestimo> devolver
+        (@PathVariable Integer Id  ){
+            Optional<Emprestimo> emprestimo = emprestimoService.devolver(Id);
+
+
+            if(emprestimo.isPresent()){
+                return ResponseEntity.ok(emprestimo.get());
+            }
+
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
