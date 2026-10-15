@@ -1,8 +1,6 @@
 package br.com.senai.teste.model;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +19,6 @@ public class Emprestimo {
     private Integer id;
 
     private LocalDate dataEmprestimo;
-    private LocalDate dataDevolucao;
-    private LocalDate dataPrevistaDevolucao;
-    private static final BigDecimal MULTA_POR_DIA = new BigDecimal("2.00");
 
     @ManyToOne
     @JoinColumn(name = "aluno_id", nullable = false)
@@ -36,6 +31,7 @@ public class Emprestimo {
     public Emprestimo() {
     }
 
+
     public Integer getId() {
         return id;
     }
@@ -46,14 +42,6 @@ public class Emprestimo {
 
     public void setDataEmprestimo(LocalDate dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
-    }
-
-    public LocalDate getDataDevolucao() {
-        return dataDevolucao;
-    }
-
-    public void setDataDevolucao(LocalDate dataDevolucao) {
-        this.dataDevolucao = dataDevolucao;
     }
 
     public Aluno getAluno() {
@@ -70,63 +58,5 @@ public class Emprestimo {
 
     public void setLivro(Livro livro) {
         this.livro = livro;
-    }
-
-    public LocalDate getDataPrevistaDevolucao() {
-        return dataPrevistaDevolucao;
-    }
-
-    public void setDataPrevistaDevolucao(
-            LocalDate dataPrevistaDevolucao) {
-
-        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
-    }
-
-    public String getSituacao() {
-
-        if (dataDevolucao != null) {
-            return "DEVOLVIDO";
-        }
-
-        if (dataPrevistaDevolucao == null) {
-            return "SEM_PREVISAO";
-        }
-
-        if (dataPrevistaDevolucao.isBefore(
-                LocalDate.now())) {
-
-            return "ATRASADO";
-        }
-
-        return "ATIVO";
-    }
-
-    public long getDiasAtraso() {
-
-        if (dataPrevistaDevolucao == null) {
-            return 0;
-        }
-
-        LocalDate dataFinal;
-
-        if (dataDevolucao == null) {
-            dataFinal = LocalDate.now();
-        } else {
-            dataFinal = dataDevolucao;
-        }
-
-        if (!dataFinal.isAfter(dataPrevistaDevolucao)) {
-            return 0;
-        }
-
-        return ChronoUnit.DAYS.between(
-                dataPrevistaDevolucao,
-                dataFinal);
-    }
-
-    public BigDecimal getValorMulta() {
-
-        return MULTA_POR_DIA.multiply(
-                BigDecimal.valueOf(getDiasAtraso()));
     }
 }
