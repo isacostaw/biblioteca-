@@ -7,8 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.senai.teste.model.Emprestimo;
 
 public interface EmprestimoRepository
-                extends JpaRepository<Emprestimo, Integer> {
+        extends JpaRepository<Emprestimo, Integer> {
 
-                    List<Emprestimo> findByDevolucaoIsNull();
+            List<Emprestimo> findByDataDevolucaoIsNull();
+
+            boolean existsByLivroIdAndDataDevolucaoIsNull(Integer livroId);
+
+            List<Emprestimo> findByAlunoId(Integer alunoId);
+
+            List<Emprestimo> findByLivroId(Integer livroId);
+
 
 }
